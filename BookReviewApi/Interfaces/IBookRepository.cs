@@ -9,6 +9,8 @@ namespace BookReviewApi.Interfaces
         Book GetBook(string name);
         decimal GetBookRating (int id);
         bool BookExists(int id);
+        bool Createbook(int authorId, int CategoryId, Book book);
+        bool Save();
 
     }
 }

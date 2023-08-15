@@ -1,14 +1,12 @@
 ﻿namespace BookReviewApi.Dto
 {
-    public record BookDto
+    public record CategoryDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public DateTime DateCreated { get; set; }
     }
-    public record CreateBookDto
+    public record CreateCategoryDto
     {
         public string Name { get; set; }
-        public DateTime DateCreated { get; set; }
     }
 }

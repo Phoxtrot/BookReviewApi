@@ -18,6 +18,26 @@ namespace BookReviewApi.Repository
             return _context.Books.Any(b => b.Id == id);
         }
 
+        public bool Createbook(int authorId, int CategoryId, Book book)
+        {
+            var authorEntity = _context.Authors.Where(a=>a.Id == authorId).FirstOrDefault();
+            var categoryEntity = _context.Categories.Where(c=>c.Id==CategoryId).FirstOrDefault();
+            var bookAuthors = new BookAuthor()
+            {
+                Author = authorEntity,
+                Book = book,
+            };
+            _context.Add(bookAuthors);
+            var bookCategory = new BookCategory()
+            {
+                Category = categoryEntity,
+                Book = book
+            };
+            _context.Add(bookCategory);
+            _context.Add(book);
+            return Save();
+        }
+
         public Book GetBook(int id)
         {
             return _context.Books.Where(b => b.Id == id).FirstOrDefault();
@@ -41,6 +61,12 @@ namespace BookReviewApi.Repository
         public ICollection <Book> GetBooks()
         {
             return _context.Books.OrderBy(b=>b.Id).ToList();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

@@ -6,6 +6,7 @@
         public string Name  { get; set; }
         public string Institution { get; set; }
         public Country Country { get; set; }
+        public int CountryId { get; set; }
         public ICollection<BookAuthor> BookAuthors { get; set; }
 
     }

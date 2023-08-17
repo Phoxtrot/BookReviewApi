@@ -10,6 +10,8 @@ namespace BookReviewApi.Interfaces
         bool AuthorExists(int id);
         Author GetBookAuthor(int id);
         bool CreateAuthor(Author author);
+        bool UpdateAuthor(Author author);
+        bool DeleteAuthor(Author author);
         bool Save();
     }
 }

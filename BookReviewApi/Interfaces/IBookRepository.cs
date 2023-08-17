@@ -10,6 +10,8 @@ namespace BookReviewApi.Interfaces
         decimal GetBookRating (int id);
         bool BookExists(int id);
         bool Createbook(int authorId, int CategoryId, Book book);
+        bool UpdateBook(int authorId, int CategoryId, Book book);
+        bool DeleteBook(Book book);
         bool Save();
 
     }

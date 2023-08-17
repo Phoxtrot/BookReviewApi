@@ -85,7 +85,7 @@ namespace BookReviewApi.Controllers
         [ProducesResponseType(204)]
         public IActionResult CreateBook([FromQuery] int CategoryId, [FromQuery] int AuthorId, [FromBody]CreateBookDto createBook)
         {
-            if (createBook == null || CategoryId == null || AuthorId == null)
+            if (createBook == null )
             {
                 return BadRequest(ModelState);
             } 
@@ -102,6 +102,57 @@ namespace BookReviewApi.Controllers
                 return StatusCode(500, ModelState);
             }
             return Ok("Sucessful");
+        }
+
+
+        [HttpPut("{bookId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateBook(int bookId, [FromQuery]int AuthorId, [FromQuery]int CategoryId, [FromBody]UpdateBookDto updateBook)
+        {
+            if (updateBook==null)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!_bookRepository.BookExists(bookId))
+            {
+                return NotFound();
+            }
+            if (updateBook.Id != bookId)
+            {
+                return BadRequest(ModelState);
+            }
+            var bookMap = _mapper.Map<Book>(updateBook);
+            if (!_bookRepository.UpdateBook(AuthorId,CategoryId,bookMap))
+            {
+                ModelState.AddModelError("", "Something went wrong...");
+                return StatusCode(500,ModelState);
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("{BookID}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteBook(int BookID)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            if (!_bookRepository.BookExists(BookID))
+            {
+                return NotFound();
+            }
+            var deletedBook = _bookRepository.GetBook(BookID);
+            if (!_bookRepository.DeleteBook(deletedBook))
+            {
+                ModelState.AddModelError("", "Soemthing went wrong...");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
         }
     }
 }

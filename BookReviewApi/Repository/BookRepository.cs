@@ -38,6 +38,12 @@ namespace BookReviewApi.Repository
             return Save();
         }
 
+        public bool DeleteBook(Book book)
+        {
+            _context.Books.Remove(book);
+            return Save();
+        }
+
         public Book GetBook(int id)
         {
             return _context.Books.Where(b => b.Id == id).FirstOrDefault();
@@ -67,6 +73,12 @@ namespace BookReviewApi.Repository
         {
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
+        }
+
+        public bool UpdateBook(int authorId, int CategoryId, Book book)
+        {
+            _context.Update(book);
+            return Save();
         }
     }
 }

@@ -11,4 +11,10 @@
         public string Name { get; set; }
         public string Institution { get; set; }
     }
+    public record UpdateAuthorDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Institution { get; set; }
+    }
 }

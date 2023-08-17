@@ -2,6 +2,7 @@
 using BookReviewApi.Dto;
 using BookReviewApi.Interfaces;
 using BookReviewApi.Models;
+using BookReviewApi.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookReviewApi.Controllers
@@ -105,7 +106,56 @@ namespace BookReviewApi.Controllers
                 return StatusCode(500, ModelState);
             }
             return Ok("Succesful");
+        }
 
+        [HttpPut("{CountryId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateCountry(int CountryId, [FromBody]UpdateCountryDto updatedCountry)
+        {
+            if (updatedCountry == null)
+            {
+                return BadRequest(ModelState);
+            }
+            if (updatedCountry.Id != CountryId)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!_countryRepository.CountryExists(updatedCountry.Id))
+            {
+                return NotFound();
+            }
+            var countryMap = _mapper.Map<Country>(updatedCountry);
+            if (!_countryRepository.UpdateCountry(countryMap))
+            {
+                ModelState.AddModelError("", "Something went wrong...");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("{CountryId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteBook(int CountryId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            if (!_countryRepository.CountryExists(CountryId))
+            {
+                return NotFound();
+            }
+            var deletedBook = _countryRepository.GetCountry(CountryId);
+            if (!_countryRepository.DeleteCountry(deletedBook))
+            {
+                ModelState.AddModelError("", "Soemthing went wrong...");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
         }
     }
 }

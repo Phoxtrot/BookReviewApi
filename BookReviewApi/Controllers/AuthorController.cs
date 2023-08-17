@@ -4,6 +4,7 @@ using BookReviewApi.Interfaces;
 using BookReviewApi.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace BookReviewApi.Controllers
 {
@@ -89,5 +90,57 @@ namespace BookReviewApi.Controllers
             }
             return Ok("Succesful");
         }
+
+        [HttpPut("{AuthorId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult UpdateAuthor(int AuthorId,[FromBody]UpdateAuthorDto updateAuthor)
+        {
+            if (UpdateAuthor == null)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!_authorRepository.AuthorExists(AuthorId))
+            {
+                return NotFound();
+            }
+            if (updateAuthor.Id != AuthorId)
+            {
+                return BadRequest(ModelState);
+            }
+            var authorMap = _mapper.Map<Author>(updateAuthor);
+            
+            if (!_authorRepository.UpdateAuthor(authorMap))
+            {
+                ModelState.AddModelError("", "Something went wrong...");
+                return StatusCode(500,ModelState);
+            }
+            return Ok("Succesfully Updated");
+        }
+
+
+        [HttpDelete("{AuthorId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteAuthor(int AuthorId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            if (!_authorRepository.AuthorExists(AuthorId))
+            {
+                return NotFound();
+            }
+            var DeletedAuthor = _authorRepository.GetAuthor(AuthorId);
+            if (!_authorRepository.DeleteAuthor(DeletedAuthor))
+            {
+                ModelState.AddModelError("", "Soemthing went wrong...");
+                return StatusCode(500,ModelState);
+            }
+            return NoContent();
+        }
+
     }
 }

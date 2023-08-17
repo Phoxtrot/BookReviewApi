@@ -24,6 +24,12 @@ namespace BookReviewApi.Repository
             return Save();
         }
 
+        public bool DeleteCountry(Country country)
+        {
+           _dataContext.Countries.Remove(country);
+            return Save();
+        }
+
         public Country GetAuthorCountry(int AuthorId)
         {
             return _dataContext.Authors.Where(a => a.Id == AuthorId).Select(c => c.Country).FirstOrDefault();
@@ -43,6 +49,12 @@ namespace BookReviewApi.Repository
         {
             var saved = _dataContext.SaveChanges();
             return saved > 0 ? true : false;
+        }
+
+        public bool UpdateCountry(Country country)
+        {
+            _dataContext.Countries.Update(country);
+            return Save();
         }
 
         ICollection<Author> ICountryRepository.GetAuthorsByCountry(int CountryId)

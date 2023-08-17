@@ -48,5 +48,17 @@ namespace BookReviewApi.Repository
             var saved = _dataContext.SaveChanges();
             return saved > 0 ? true : false;
         }
+
+        public bool UpdateAuthor(Author author)
+        {
+            _dataContext.Update(author);
+            return Save();
+        }
+
+        public bool DeleteAuthor(Author author)
+        {
+            _dataContext.Remove(author);
+            return Save();
+        }
     }
 }

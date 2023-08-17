@@ -10,6 +10,8 @@ namespace BookReviewApi.Interfaces
         ICollection<Author> GetAuthorsByCountry(int CountryId);
         Country GetAuthorCountry(int AuthorId);
         bool CreateCountry(Country country);
+        bool UpdateCountry(Country country);
+        bool DeleteCountry(Country country);
         bool Save();
 
     }

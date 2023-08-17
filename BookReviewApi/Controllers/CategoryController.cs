@@ -85,5 +85,61 @@ namespace BookReviewApi.Controllers
             }
             return Ok("Sucessful");
         }
+
+
+        [HttpPut]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateCategory(int CategoryId, UpdateCategoryDto updateCategory)
+        {
+            if (updateCategory == null)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!_categoryRepository.CategoryExists(CategoryId))
+            {
+                return NotFound();
+            }
+            if (updateCategory.Id != CategoryId)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            var categoryMap = _mapper.Map<Category>(updateCategory);
+            if (!_categoryRepository.UpdateCategory(categoryMap))
+            {
+                ModelState.AddModelError("", "Someting went wrong");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Succesfully Updated");
+        }
+
+
+        [HttpDelete("{CategoryId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteBook(int CategoryId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            if (!_categoryRepository.CategoryExists(CategoryId))
+            {
+                return NotFound();
+            }
+            var deletedBook = _categoryRepository.GetCategory(CategoryId);
+            if (!_categoryRepository.DeleteCategory(deletedBook))
+            {
+                ModelState.AddModelError("", "Soemthing went wrong...");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
     }
 }

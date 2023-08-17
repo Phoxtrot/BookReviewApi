@@ -1,5 +1,6 @@
 ﻿using BookReviewApi.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 
 namespace BookReviewApi.Data
 {
@@ -22,18 +23,34 @@ namespace BookReviewApi.Data
             modelBuilder.Entity<BookCategory>().HasKey(bc => new { bc.BookId, bc.CategoryId });
             modelBuilder.Entity<BookCategory>().HasOne(b => b.Book)
                 .WithMany(bc=>bc.BookCategories)
-                .HasForeignKey(b=>b.BookId);
+                .HasForeignKey(b=>b.BookId)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<BookCategory>().HasOne(c => c.Category)
                .WithMany(bc => bc.BookCategories)
-               .HasForeignKey(c => c.CategoryId);
+               .HasForeignKey(c => c.CategoryId)
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<BookAuthor>().HasKey(ba => new { ba.BookId, ba.AuthorId });
             modelBuilder.Entity<BookAuthor>().HasOne(b=>b.Book)
                 .WithMany(ba=>ba.BookAuthors)
-                .HasForeignKey(b=>b.BookId);
+                .HasForeignKey(b=>b.BookId)
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<BookAuthor>().HasOne(a=>a.Author)
                 .WithMany(ba=>ba.BookAuthors)
-                .HasForeignKey(a=>a.AuthorId);
+                .HasForeignKey(a=>a.AuthorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Country>().HasMany(c => c.Authors).WithOne(a => a.Country)
+            .HasForeignKey(a => a.CountryId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Reviewer>().HasMany(r => r.Reviews).WithOne(r=>r.Reviewer)
+            .HasForeignKey(r=>r.ReviewerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Book>().HasMany(r => r.Reviews).WithOne(r => r.Book)
+            .HasForeignKey(r => r.BookId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
 
     }

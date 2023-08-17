@@ -43,5 +43,16 @@ namespace BookReviewApi.Repository
             var saved = _dataContext.SaveChanges();
             return saved > 0 ? true : false;
         }
+
+        public bool UpdateCategory(Category category)
+        {
+            _dataContext.Categories.Update(category);
+            return Save();
+        }
+        public bool DeleteCategory(Category category)
+        {
+            _dataContext.Categories.Remove(category);
+            return Save();
+        }
     }
 }

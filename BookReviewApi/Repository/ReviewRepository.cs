@@ -13,6 +13,18 @@ namespace BookReviewApi.Repository
             _dataContext = dataContext;
         }
 
+        public bool CreateReview(Review review)
+        {
+            _dataContext.Add(review);
+            return Save();
+        }
+
+        public bool DeleteReview(Review review)
+        {
+            _dataContext.Reviews.Remove(review);
+            return Save();
+        }
+
         public ICollection<Review> GetBookReviews(int bookId)
         {
             return _dataContext.Reviews.Where(b=>b.Book.Id==bookId).ToList();
@@ -26,6 +38,19 @@ namespace BookReviewApi.Repository
         public bool ReviewExists(int id)
         {
             return _dataContext.Reviews.Any(r => r.Id == id);  
+        }
+
+        public bool Save()
+        {
+            var saved = _dataContext.SaveChanges();
+            return saved > 0 ? true : false;    
+        }
+
+        public bool UpdateReview(Review review)
+        {
+            _dataContext.Reviews.Update(review);
+            return Save();
+
         }
     }
 }

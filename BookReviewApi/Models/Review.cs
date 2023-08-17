@@ -8,5 +8,7 @@
         public Book Book { get; set; }
         public int Rating { get; set; }
         public Reviewer Reviewer { get; set; }
+        public int ReviewerId { get; set; }
+        public int BookId { get; set; }
     }
 }
